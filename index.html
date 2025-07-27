@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Koperasi - Pengadaan Barang</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-badge {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-success {
+            background: #38a169;
+            color: white;
+        }
+
+        .nav-tabs {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tabs button {
+            background: transparent;
+            border: none;
+            padding: 12px 25px;
+            margin-right: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-tabs button:hover:not(.active) {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            min-height: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        table tr:hover {
+            background: #f7fafc;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #feb2b2;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header i {
+            font-size: 3em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card i {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs button {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-store"></i>
+                <h2>Dashboard Koperasi</h2>
+                <p>Sistem Pengadaan Barang & Perlengkapan</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <div id="loginAlert" class="alert alert-error"></div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="mainDashboard" class="hidden">
+        <div class="container">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-store"></i>
+                    <div>
+                        <h1>Dashboard Koperasi</h1>
+                        <small>Pengadaan Barang & Perlengkapan</small>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-badge">
+                        <i class="fas fa-user"></i>
+                        <span id="userName"></span> - <span id="userLevel"></span>
+                    </div>
+                    <button class="btn btn-secondary" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="statsSection">
+                <div class="stat-card">
+                    <i class="fas fa-shopping-cart" style="color: #667eea;"></i>
+                    <h3 id="totalSales">0</h3>
+                    <p>Total Penjualan</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users" style="color: #38a169;"></i>
+                    <h3 id="totalCustomers">0</h3>
+                    <p>Total Customer</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-boxes" style="color: #e53e3e;"></i>
+                    <h3 id="totalItems">0</h3>
+                    <p>Total Item</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-user-tie" style="color: #764ba2;"></i>
+                    <h3 id="totalPetugas">0</h3>
+                    <p>Total Petugas</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="showTab('sales')" id="salesTab">
+                    <i class="fas fa-shopping-cart"></i> Penjualan
+                </button>
+                <button class="tab-btn" onclick="showTab('customers')" id="customersTab">
+                    <i class="fas fa-users"></i> Customer
+                </button>
+                <button class="tab-btn" onclick="showTab('items')" id="itemsTab">
+                    <i class="fas fa-boxes"></i> Item
+                </button>
+                <button class="tab-btn" onclick="showTab('petugas')" id="petugasTab">
+                    <i class="fas fa-user-tie"></i> Petugas
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content">
+                <div id="alertContainer"></div>
+
+                <!-- Sales Tab -->
+                <div id="salesContent" class="tab-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3><i class="fas fa-shopping-cart"></i> Data Penjualan</h3>
+                        <button class="btn btn-primary" onclick="openSalesModal()" id="addSalesBtn">
+                            <i class="fas fa-plus"></i> Tambah Penjualan
+                        </button>
+                    </div>
+                    <table id="salesTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Customers Tab -->
+                <div id="customersContent" class="tab-content hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3><i class="fas fa-users"></i> Data Customer</h3>
+                        <button class="btn btn-primary" onclick="openCustomerModal()">
+                            <i class="fas fa-plus"></i> Tambah Customer
+                        </button>
+                    </div>
+                    <table id="customersTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Alamat</th>
+                                <th>Telepon</th>
+                                <th>Email</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Items Tab -->
+                <div id="itemsContent" class="tab-content hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3><i class="fas fa-boxes"></i> Data Item</h3>
+                        <button class="btn btn-primary" onclick="openItemModal()">
+                            <i class="fas fa-plus"></i> Tambah Item
+                        </button>
+                    </div>
+                    <table id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Item</th>
+                                <th>UOM</th>
+                                <th>Harga Beli</th>
+                                <th>Harga Jual</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Petugas Tab -->
+                <div id="petugasContent" class="tab-content hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3><i class="fas fa-user-tie"></i> Data Petugas</h3>
+                        <button class="btn btn-primary" onclick="openPetugasModal()">
+                            <i class="fas fa-plus"></i> Tambah Petugas
+                        </button>
+                    </div>
+                    <table id="petugasTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Username</th>
+                                <th>Level</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Customer Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="customerModalTitle">Tambah Customer</h3>
+                <span class="close" onclick="closeModal('customerModal')">&times;</span>
+            </div>
+            <form id="customerForm">
+                <input type="hidden" id="customerId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nama</label>
+                        <input type="text" id="customerNama" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telepon</label>
+                        <input type="text" id="customerTelp">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Alamat</label>
+                    <textarea id="customerAlamat" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Fax</label>
+                        <input type="text" id="customerFax">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="customerEmail">
+                    </div>
+                </div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('customerModal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Item Modal -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="itemModalTitle">Tambah Item</h3>
+                <span class="close" onclick="closeModal('itemModal')">&times;</span>
+            </div>
+            <form id="itemForm">
+                <input type="hidden" id="itemId">
+                <div class="form-group">
+                    <label>Nama Item</label>
+                    <input type="text" id="itemNama" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>UOM (Satuan)</label>
+                        <input type="text" id="itemUom" placeholder="pcs, kg, liter, dll">
+                    </div>
+                    <div class="form-group">
+                        <label>Harga Beli</label>
+                        <input type="number" id="itemHargaBeli" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Harga Jual</label>
+                        <input type="number" id="itemHargaJual" required>
+                    </div>
+                </div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('itemModal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Petugas Modal -->
+    <div id="petugasModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="petugasModalTitle">Tambah Petugas</h3>
+                <span class="close" onclick="closeModal('petugasModal')">&times;</span>
+            </div>
+            <form id="petugasForm">
+                <input type="hidden" id="petugasId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nama</label>
+                        <input type="text" id="petugasNama" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="petugasUsername" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="petugasPassword">
+                    </div>
+                    <div class="form-group">
+                        <label>Level</label>
+                        <select id="petugasLevel" required>
+                            <option value="">Pilih Level</option>
+                            <option value="0">Petugas Sales</option>
+                            <option value="1">Petugas Pengawas</option>
+                            <option value="2">Manajer</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('petugasModal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sales Modal -->
+    <div id="salesModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 id="salesModalTitle">Tambah Penjualan</h3>
+                <span class="close" onclick="closeModal('salesModal')">&times;</span>
+            </div>
+            <form id="salesForm">
+                <input type="hidden" id="salesId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tanggal</label>
+                        <input type="date" id="salesTanggal" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Customer</label>
+                        <select id="salesCustomer">
+                            <option value="">Pilih Customer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h4 style="margin: 20px 0 10px 0;">Item Penjualan</h4>
+                <div id="transactionItems">
+                    <div class="transaction-item" style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 5px; margin-bottom: 10px;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Item</label>
+                                <select class="item-select" name="id_item" required>
+                                    <option value="">Pilih Item</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Quantity</label>
+                                <input type="number" name="quantity" min="1" required onchange="calculateAmount(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Harga</label>
+                                <input type="number" name="price" required onchange="calculateAmount(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Total</label>
+                                <input type="number" name="amount" readonly>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-danger" onclick="removeTransactionItem(this)" style="margin-top: 10px;">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="addTransactionItem()" style="margin-bottom: 20px;">
+                    <i class="fas fa-plus"></i> Tambah Item
+                </button>
+
+                <div style="text-align: right; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('salesModal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let token = null;
+        const API_BASE = 'http://localhost:4000/api/v1';
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const savedToken = localStorage.getItem('token');
+            const savedUser = localStorage.getItem('user');
+
+            if (savedToken && savedUser) {
+                token = savedToken;
+                currentUser = JSON.parse(savedUser);
+                showDashboard();
+            }
+
+            // Form event listeners
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('customerForm').addEventListener('submit', handleCustomerSubmit);
+            document.getElementById('itemForm').addEventListener('submit', handleItemSubmit);
+            document.getElementById('petugasForm').addEventListener('submit', handlePetugasSubmit);
+            document.getElementById('salesForm').addEventListener('submit', handleSalesSubmit);
+
+            // Set today's date for sales form
+            document.getElementById('salesTanggal').value = new Date().toISOString().split('T')[0];
+        });
+
+        // Authentication functions
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/petugas/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    token = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    showDashboard();
+                } else {
+                    showAlert(data.message, 'error', 'loginAlert');
+                }
+            } catch (error) {
+                showAlert('Error connecting to server', 'error', 'loginAlert');
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userLevel').textContent = getLevelText(currentUser.level);
+
+            // Set role-based permissions
+            setRolePermissions();
+
+            // Load initial data
+            loadStats();
+            loadSalesData();
+            loadCustomersData();
+            loadItemsData();
+            loadPetugasData();
+            loadCustomerOptions();
+            loadItemOptions();
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            token = null;
+            currentUser = null;
+            document.getElementById('mainDashboard').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+        }
+
+        function setRolePermissions() {
+            const isAdmin = currentUser.level === 2; // Manajer
+            const isSupervisor = currentUser.level === 1; // Pengawas
+            const isSales = currentUser.level === 0; // Sales
+
+            // Hide petugas tab for non-admin users
+            if (!isAdmin) {
+                document.getElementById('petugasTab').style.display = 'none';
+            }
+
+            // Disable add sales button for supervisors
+            if (isSupervisor) {
+                const addSalesBtn = document.getElementById('addSalesBtn');
+                if (addSalesBtn) {
+                    addSalesBtn.style.display = 'none';
+                }
+            }
+        }
+
+        function getLevelText(level) {
+            switch(level) {
+                case 0: return 'Petugas Sales';
+                case 1: return 'Petugas Pengawas';
+                case 2: return 'Manajer';
+                default: return 'Unknown';
+            }
+        }
+
+        // API Helper function
+        async function apiRequest(endpoint, options = {}) {
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+
+            const config = { ...defaultOptions, ...options };
+            if (options.headers) {
+                config.headers = { ...defaultOptions.headers, ...options.headers };
+            }
+
+            const response = await fetch(`${API_BASE}${endpoint}`, config);
+            return response;
+        }
+
+        // Tab functions
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            // Remove active class from all tabs
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab content
+            document.getElementById(tabName + 'Content').classList.remove('hidden');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Alert function
+        function showAlert(message, type, containerId = 'alertContainer') {
+            const container = document.getElementById(containerId);
+            const alertClass = type === 'error' ? 'alert-error' : 'alert-success';
+
+            container.innerHTML = `<div class="alert ${alertClass}" style="display: block;">${message}</div>`;
+
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            // Reset form
+            const form = document.querySelector(`#${modalId} form`);
+            if (form) form.reset();
+        }
+
+        // Stats functions
+        async function loadStats() {
+            try {
+                // Load all data for stats
+                const [salesRes, customersRes, itemsRes, petugasRes] = await Promise.all([
+                    apiRequest('/sales'),
+                    apiRequest('/customer'),
+                    apiRequest('/item'),
+                    apiRequest('/petugas')
+                ]);
+
+                if (salesRes.ok) {
+                    const sales = await salesRes.json();
+                    document.getElementById('totalSales').textContent = sales.length;
+                }
+
+                if (customersRes.ok) {
+                    const customers = await customersRes.json();
+                    document.getElementById('totalCustomers').textContent = customers.length;
+                }
+
+                if (itemsRes.ok) {
+                    const items = await itemsRes.json();
+                    document.getElementById('totalItems').textContent = items.length;
+                }
+
+                if (petugasRes.ok) {
+                    const petugas = await petugasRes.json();
+                    document.getElementById('totalPetugas').textContent = petugas.length;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Customer functions
+        async function loadCustomersData() {
+            try {
+                const response = await apiRequest('/customer');
+                if (response.ok) {
+                    const customers = await response.json();
+                    renderCustomersTable(customers);
+                }
+            } catch (error) {
+                console.error('Error loading customers:', error);
+            }
+        }
+
+        function renderCustomersTable(customers) {
+            const tbody = document.querySelector('#customersTable tbody');
+            tbody.innerHTML = '';
+
+            customers.forEach((customer, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${customer.nama}</td>
+                        <td>${customer.alamat || '-'}</td>
+                        <td>${customer.telp || '-'}</td>
+                        <td>${customer.email || '-'}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCustomer(${customer.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteCustomer(${customer.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function openCustomerModal(customer = null) {
+            if (customer) {
+                document.getElementById('customerModalTitle').textContent = 'Edit Customer';
+                document.getElementById('customerId').value = customer.id;
+                document.getElementById('customerNama').value = customer.nama;
+                document.getElementById('customerAlamat').value = customer.alamat || '';
+                document.getElementById('customerTelp').value = customer.telp || '';
+                document.getElementById('customerFax').value = customer.fax || '';
+                document.getElementById('customerEmail').value = customer.email || '';
+            } else {
+                document.getElementById('customerModalTitle').textContent = 'Tambah Customer';
+                document.getElementById('customerForm').reset();
+            }
+            openModal('customerModal');
+        }
+
+        async function handleCustomerSubmit(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('customerId').value;
+            const data = {
+                nama: document.getElementById('customerNama').value,
+                alamat: document.getElementById('customerAlamat').value,
+                telp: document.getElementById('customerTelp').value,
+                fax: document.getElementById('customerFax').value,
+                email: document.getElementById('customerEmail').value
+            };
+
+            try {
+                const url = id ? `/customer/${id}` : '/customers';
+                const method = id ? 'PUT' : 'POST';
+
+                const response = await apiRequest(url, {
+                    method: method,
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert(result.message, 'success');
+                    closeModal('customerModal');
+                    loadCustomersData();
+                    loadCustomerOptions();
+                    loadStats();
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Error saving customer', 'error');
+            }
+        }
+
+        async function editCustomer(id) {
+            try {
+                const response = await apiRequest(`/customer/${id}`);
+                if (response.ok) {
+                    const customer = await response.json();
+                    openCustomerModal(customer);
+                }
+            } catch (error) {
+                showAlert('Error loading customer data', 'error');
+            }
+        }
+
+        async function deleteCustomer(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus customer ini?')) {
+                try {
+                    const response = await apiRequest(`/customer/${id}`, { method: 'DELETE' });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showAlert(result.message, 'success');
+                        loadCustomersData();
+                        loadCustomerOptions();
+                        loadStats();
+                    } else {
+                        showAlert(result.message, 'error');
+                    }
+                } catch (error) {
+                    showAlert('Error deleting customer', 'error');
+                }
+            }
+        }
+
+        // Item functions
+        async function loadItemsData() {
+            try {
+                const response = await apiRequest('/item');
+                if (response.ok) {
+                    const items = await response.json();
+                    renderItemsTable(items);
+                }
+            } catch (error) {
+                console.error('Error loading items:', error);
+            }
+        }
+
+        function renderItemsTable(items) {
+            const tbody = document.querySelector('#itemsTable tbody');
+            tbody.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.nama_item}</td>
+                        <td>${item.uom || '-'}</td>
+                        <td>Rp ${formatNumber(item.harga_beli)}</td>
+                        <td>Rp ${formatNumber(item.harga_jual)}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editItem(${item.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteItem(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function openItemModal(item = null) {
+            if (item) {
+                document.getElementById('itemModalTitle').textContent = 'Edit Item';
+                document.getElementById('itemId').value = item.id;
+                document.getElementById('itemNama').value = item.nama_item;
+                document.getElementById('itemUom').value = item.uom || '';
+                document.getElementById('itemHargaBeli').value = item.harga_beli;
+                document.getElementById('itemHargaJual').value = item.harga_jual;
+            } else {
+                document.getElementById('itemModalTitle').textContent = 'Tambah Item';
+                document.getElementById('itemForm').reset();
+            }
+            openModal('itemModal');
+        }
+
+        async function handleItemSubmit(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('itemId').value;
+            const data = {
+                nama_item: document.getElementById('itemNama').value,
+                uom: document.getElementById('itemUom').value,
+                harga_beli: parseFloat(document.getElementById('itemHargaBeli').value),
+                harga_jual: parseFloat(document.getElementById('itemHargaJual').value)
+            };
+
+            try {
+                const url = id ? `/item/${id}` : '/item';
+                const method = id ? 'PUT' : 'POST';
+
+                const response = await apiRequest(url, {
+                    method: method,
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert(result.message, 'success');
+                    closeModal('itemModal');
+                    loadItemsData();
+                    loadItemOptions();
+                    loadStats();
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Error saving item', 'error');
+            }
+        }
+
+        async function editItem(id) {
+            try {
+                const response = await apiRequest(`/item/${id}`);
+                if (response.ok) {
+                    const item = await response.json();
+                    openItemModal(item);
+                }
+            } catch (error) {
+                showAlert('Error loading item data', 'error');
+            }
+        }
+
+        async function deleteItem(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus item ini?')) {
+                try {
+                    const response = await apiRequest(`/item/${id}`, { method: 'DELETE' });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showAlert(result.message, 'success');
+                        loadItemsData();
+                        loadItemOptions();
+                        loadStats();
+                    } else {
+                        showAlert(result.message, 'error');
+                    }
+                } catch (error) {
+                    showAlert('Error deleting item', 'error');
+                }
+            }
+        }
+
+        // Petugas functions
+        async function loadPetugasData() {
+            try {
+                const response = await apiRequest('/petugas');
+                if (response.ok) {
+                    const petugas = await response.json();
+                    renderPetugasTable(petugas);
+                }
+            } catch (error) {
+                console.error('Error loading petugas:', error);
+            }
+        }
+
+        function renderPetugasTable(petugas) {
+            const tbody = document.querySelector('#petugasTable tbody');
+            tbody.innerHTML = '';
+
+            petugas.forEach((p, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${p.name}</td>
+                        <td>${p.username}</td>
+                        <td>${getLevelText(p.level)}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editPetugas(${p.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger" onclick="deletePetugas(${p.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function openPetugasModal(petugas = null) {
+            if (petugas) {
+                document.getElementById('petugasModalTitle').textContent = 'Edit Petugas';
+                document.getElementById('petugasId').value = petugas.id;
+                document.getElementById('petugasNama').value = petugas.name;
+                document.getElementById('petugasUsername').value = petugas.username;
+                document.getElementById('petugasLevel').value = petugas.level;
+                document.getElementById('petugasPassword').required = false;
+            } else {
+                document.getElementById('petugasModalTitle').textContent = 'Tambah Petugas';
+                document.getElementById('petugasForm').reset();
+                document.getElementById('petugasPassword').required = true;
+            }
+            openModal('petugasModal');
+        }
+
+        async function handlePetugasSubmit(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('petugasId').value;
+            const data = {
+                name: document.getElementById('petugasNama').value,
+                username: document.getElementById('petugasUsername').value,
+                level: parseInt(document.getElementById('petugasLevel').value)
+            };
+
+            const password = document.getElementById('petugasPassword').value;
+            if (password) {
+                data.password = password;
+            }
+
+            try {
+                const url = id ? `/petugas/${id}` : '/petugas/register';
+                const method = id ? 'PUT' : 'POST';
+
+                const response = await apiRequest(url, {
+                    method: method,
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert(result.message, 'success');
+                    closeModal('petugasModal');
+                    loadPetugasData();
+                    loadStats();
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Error saving petugas', 'error');
+            }
+        }
+
+        async function editPetugas(id) {
+            try {
+                const response = await apiRequest(`/petugas/${id}`);
+                if (response.ok) {
+                    const petugas = await response.json();
+                    openPetugasModal(petugas);
+                }
+            } catch (error) {
+                showAlert('Error loading petugas data', 'error');
+            }
+        }
+
+        async function deletePetugas(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus petugas ini?')) {
+                try {
+                    const response = await apiRequest(`/petugas/${id}`, { method: 'DELETE' });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showAlert(result.message, 'success');
+                        loadPetugasData();
+                        loadStats();
+                    } else {
+                        showAlert(result.message, 'error');
+                    }
+                } catch (error) {
+                    showAlert('Error deleting petugas', 'error');
+                }
+            }
+        }
+
+        // Sales functions
+        async function loadSalesData() {
+            try {
+                const response = await apiRequest('/sales');
+                if (response.ok) {
+                    const sales = await response.json();
+                    renderSalesTable(sales);
+                }
+            } catch (error) {
+                console.error('Error loading sales:', error);
+            }
+        }
+
+        function renderSalesTable(sales) {
+            const tbody = document.querySelector('#salesTable tbody');
+            tbody.innerHTML = '';
+
+            sales.forEach((sale, index) => {
+                const total = sale.transactions ?
+                    sale.transactions.reduce((sum, trx) => sum + (trx.amount || 0), 0) : 0;
+
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${formatDate(sale.tgl_sales)}</td>
+                        <td>${sale.customer ? sale.customer.nama : 'Walk-in'}</td>
+                        <td>Rp ${formatNumber(total)}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="viewSales(${sale.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${currentUser.level !== 1 ? `
+                                <button class="btn btn-danger" onclick="deleteSales(${sale.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function openSalesModal(sales = null) {
+            if (sales) {
+                document.getElementById('salesModalTitle').textContent = 'Edit Penjualan';
+                document.getElementById('salesId').value = sales.id;
+                document.getElementById('salesTanggal').value = sales.tgl_sales.split('T')[0];
+                document.getElementById('salesCustomer').value = sales.id_customer || '';
+                // Load transactions for editing would go here
+            } else {
+                document.getElementById('salesModalTitle').textContent = 'Tambah Penjualan';
+                document.getElementById('salesForm').reset();
+                document.getElementById('salesTanggal').value = new Date().toISOString().split('T')[0];
+                // Reset transaction items to one empty item
+                document.getElementById('transactionItems').innerHTML = getTransactionItemHTML();
+            }
+            openModal('salesModal');
+        }
+
+        async function handleSalesSubmit(e) {
+            e.preventDefault();
+
+            const data = {
+                tgl_sales: document.getElementById('salesTanggal').value,
+                id_customer: document.getElementById('salesCustomer').value || null,
+                transactions: []
+            };
+
+            // Collect transaction items
+            const transactionItems = document.querySelectorAll('.transaction-item');
+            transactionItems.forEach(item => {
+                const id_item = item.querySelector('[name="id_item"]').value;
+                const quantity = parseInt(item.querySelector('[name="quantity"]').value);
+                const price = parseFloat(item.querySelector('[name="price"]').value);
+
+                if (id_item && quantity && price) {
+                    data.transactions.push({
+                        id_item: parseInt(id_item),
+                        quantity: quantity,
+                        price: price
+                    });
+                }
+            });
+
+            if (data.transactions.length === 0) {
+                showAlert('Minimal satu item harus diisi', 'error');
+                return;
+            }
+
+            try {
+                const response = await apiRequest('/sales', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert(result.message, 'success');
+                    closeModal('salesModal');
+                    loadSalesData();
+                    loadStats();
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('Error saving sales', 'error');
+            }
+        }
+
+        async function viewSales(id) {
+            try {
+                const response = await apiRequest(`/sales/${id}`);
+                if (response.ok) {
+                    const sales = await response.json();
+                    showSalesDetail(sales);
+                }
+            } catch (error) {
+                showAlert('Error loading sales data', 'error');
+            }
+        }
+
+        function showSalesDetail(sales) {
+            const total = sales.transactions ?
+                sales.transactions.reduce((sum, trx) => sum + (trx.amount || 0), 0) : 0;
+
+            let transactionRows = '';
+            if (sales.transactions) {
+                sales.transactions.forEach((trx, index) => {
+                    transactionRows += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${trx.Items ? trx.Items.nama_item : 'Unknown Item'}</td>
+                            <td>${trx.quantity}</td>
+                            <td>Rp ${formatNumber(trx.price)}</td>
+                            <td>Rp ${formatNumber(trx.amount)}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const content = `
+                <h3>Detail Penjualan #${sales.id}</h3>
+                <div style="margin: 20px 0;">
+                    <p><strong>Tanggal:</strong> ${formatDate(sales.tgl_sales)}</p>
+                    <p><strong>Customer:</strong> ${sales.customer ? sales.customer.nama : 'Walk-in'}</p>
+                    <p><strong>Total:</strong> Rp ${formatNumber(total)}</p>
+                </div>
+                <h4>Item Penjualan:</h4>
+                <table style="width: 100%; margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Harga</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${transactionRows}
+                    </tbody>
+                </table>
+            `;
+
+            showAlert(content, 'success');
+        }
+
+        async function deleteSales(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus penjualan ini?')) {
+                try {
+                    const response = await apiRequest(`/sales/${id}`, { method: 'DELETE' });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showAlert(result.message, 'success');
+                        loadSalesData();
+                        loadStats();
+                    } else {
+                        showAlert(result.message, 'error');
+                    }
+                } catch (error) {
+                    showAlert('Error deleting sales', 'error');
+                }
+            }
+        }
+
+        // Load options for dropdowns
+        async function loadCustomerOptions() {
+            try {
+                const response = await apiRequest('/customer');
+                if (response.ok) {
+                    const customers = await response.json();
+                    const select = document.getElementById('salesCustomer');
+                    select.innerHTML = '<option value="">Pilih Customer</option>';
+
+                    customers.forEach(customer => {
+                        select.innerHTML += `<option value="${customer.id}">${customer.nama}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading customer options:', error);
+            }
+        }
+
+        async function loadItemOptions() {
+            try {
+                const response = await apiRequest('/item');
+                if (response.ok) {
+                    const items = await response.json();
+                    const selects = document.querySelectorAll('.item-select');
+
+                    selects.forEach(select => {
+                        select.innerHTML = '<option value="">Pilih Item</option>';
+                        items.forEach(item => {
+                            select.innerHTML += `<option value="${item.id}" data-price="${item.harga_jual}">${item.nama_item} - Rp ${formatNumber(item.harga_jual)}</option>`;
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading item options:', error);
+            }
+        }
+
+        // Transaction item functions
+        function getTransactionItemHTML() {
+            return `
+                <div class="transaction-item" style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 5px; margin-bottom: 10px;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Item</label>
+                            <select class="item-select" name="id_item" required onchange="setItemPrice(this)">
+                                <option value="">Pilih Item</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" name="quantity" min="1" required onchange="calculateAmount(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>Harga</label>
+                            <input type="number" name="price" required onchange="calculateAmount(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>Total</label>
+                            <input type="number" name="amount" readonly>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="removeTransactionItem(this)" style="margin-top: 10px;">
+                        <i class="fas fa-trash"></i> Hapus
+                    </button>
+                </div>
+            `;
+        }
+
+        function addTransactionItem() {
+            const container = document.getElementById('transactionItems');
+            container.innerHTML += getTransactionItemHTML();
+            loadItemOptions(); // Reload item options for new select
+        }
+
+        function removeTransactionItem(button) {
+            const items = document.querySelectorAll('.transaction-item');
+            if (items.length > 1) {
+                button.closest('.transaction-item').remove();
+            } else {
+                showAlert('Minimal satu item harus ada', 'error');
+            }
+        }
+
+        function setItemPrice(select) {
+            const selectedOption = select.options[select.selectedIndex];
+            const price = selectedOption.getAttribute('data-price');
+            const priceInput = select.closest('.transaction-item').querySelector('[name="price"]');
+            if (price) {
+                priceInput.value = price;
+                calculateAmount(priceInput);
+            }
+        }
+
+        function calculateAmount(input) {
+            const item = input.closest('.transaction-item');
+            const quantity = parseFloat(item.querySelector('[name="quantity"]').value) || 0;
+            const price = parseFloat(item.querySelector('[name="price"]').value) || 0;
+            const amount = quantity * price;
+            item.querySelector('[name="amount"]').value = amount;
+        }
+
+        // Utility functions
+        function formatNumber(number) {
+            return new Intl.NumberFormat('id-ID').format(number);
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('id-ID');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
